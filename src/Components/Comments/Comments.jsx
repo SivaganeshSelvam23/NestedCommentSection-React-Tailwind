@@ -7,6 +7,8 @@ const Comments = () => {
     {
       id: 1,
       displayText: "Test comment 1",
+      like: null,
+      dislike: null,
       children: [],
     },
   ]);
@@ -16,6 +18,8 @@ const Comments = () => {
       const newComment = {
         id: new Date().getTime(),
         displayText: commentInput,
+        like: null,
+        dislike: null,
         children: [],
       };
 
@@ -30,16 +34,18 @@ const Comments = () => {
     return {
       id: new Date().getTime(),
       displayText: text,
+      like: null,
+      dislike: null,
       children: [],
     };
   }
 
+  //    Add Reply To Comment
   const addReply = (replyText, commentId) => {
     let commentsWithNewReply = [...comments];
     insertComment(commentsWithNewReply, commentId, replyText);
     setComments(commentsWithNewReply);
   };
-
   const insertComment = (comments, parentId, text) => {
     for (let i = 0; i < comments.length; i++) {
       let comment = comments[i];
@@ -50,6 +56,72 @@ const Comments = () => {
     for (let i = 0; i < comments.length; i++) {
       let comment = comments[i];
       insertComment(comment.children, parentId, text);
+    }
+  };
+
+  //   Add Reaction To Comment
+  const reactToReply = (type, id) => {
+    let commentsWithReactToReply = [...comments];
+    insertReact(commentsWithReactToReply, type, id);
+    setComments(commentsWithReactToReply);
+  };
+  const insertReact = (comments, type, id) => {
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      if (comment.id === id) {
+        if (type === "Like") {
+          comment.like = true;
+          comment.dislike = false;
+        } else if (type === "Dislike") {
+          comment.dislike = true;
+          comment.like = false;
+        } else {
+          comment.like = null;
+          comment.dislike = null;
+        }
+      }
+    }
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      insertComment(comment.children, id, type);
+    }
+  };
+
+  //   Edit Existing Comment
+  const EditExistingCommentHandler = (editedComment, id) => {
+    let commentModified = [...comments];
+    insertEditedComment(commentModified, editedComment, id);
+    setComments(commentModified);
+  };
+  const insertEditedComment = (comments, editedComment, id) => {
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      if (comment.id === id) {
+        comment.displayText = editedComment;
+      }
+    }
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      insertEditedComment(comment.children, editedComment, id);
+    }
+  };
+
+  //   Delete Comments
+  const deleteCommentHandler = (id) => {
+    let commentModified = [...comments];
+    removeComment(commentModified, id);
+    setComments(commentModified);
+  };
+  const removeComment = (comments, id) => {
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      if (comment.id === id) {
+        comments.splice(i, 1);
+      }
+    }
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      removeComment(comment.children, id);
     }
   };
 
@@ -64,7 +136,7 @@ const Comments = () => {
           onChange={(e) => setCommentInput(e.target.value)}
         />
         <button
-          className="bg-green-800 w-[150px] p-3 rounded-lg text-xl"
+          className="bg-green-600 w-[150px] p-3 rounded-lg text-xl"
           onClick={() => handleNewComment(commentInput)}
         >
           Comment
@@ -72,7 +144,14 @@ const Comments = () => {
       </div>
       <div className="">
         {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment} addReply={addReply} />
+          <Comment
+            key={comment.id}
+            comment={comment}
+            addReply={addReply}
+            reactToReply={reactToReply}
+            EditExistingCommentHandler={EditExistingCommentHandler}
+            deleteCommentHandler={deleteCommentHandler}
+          />
         ))}
       </div>
     </div>
