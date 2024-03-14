@@ -7,8 +7,8 @@ const Comments = () => {
     {
       id: 1,
       displayText: "Test comment 1",
-      like: null,
-      dislike: null,
+      like: false,
+      dislike: false,
       children: [],
     },
   ]);
@@ -18,8 +18,8 @@ const Comments = () => {
       const newComment = {
         id: new Date().getTime(),
         displayText: commentInput,
-        like: null,
-        dislike: null,
+        like: false,
+        dislike: false,
         children: [],
       };
 
@@ -34,8 +34,8 @@ const Comments = () => {
     return {
       id: new Date().getTime(),
       displayText: text,
-      like: null,
-      dislike: null,
+      like: false,
+      dislike: false,
       children: [],
     };
   }
@@ -83,7 +83,7 @@ const Comments = () => {
     }
     for (let i = 0; i < comments.length; i++) {
       let comment = comments[i];
-      insertComment(comment.children, id, type);
+      insertReact(comment.children, type, id);
     }
   };
 
@@ -143,16 +143,24 @@ const Comments = () => {
         </button>
       </div>
       <div className="">
-        {comments.map((comment) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            addReply={addReply}
-            reactToReply={reactToReply}
-            EditExistingCommentHandler={EditExistingCommentHandler}
-            deleteCommentHandler={deleteCommentHandler}
-          />
-        ))}
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <Comment
+              key={comment.id}
+              comment={comment}
+              addReply={addReply}
+              reactToReply={reactToReply}
+              EditExistingCommentHandler={EditExistingCommentHandler}
+              deleteCommentHandler={deleteCommentHandler}
+            />
+          ))
+        ) : (
+          <div className=" h-[400px] flex items-center justify-center ">
+            <span className="font-Poppins text-[30px]">
+              No Comment To Show Add Some Comment
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

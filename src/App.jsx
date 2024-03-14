@@ -7,7 +7,9 @@ function App() {
   return (
     <div className="bg-purple-900 h-screen p-5 text-white overflow-auto">
       <div className="flex justify-center">
-        <h2 className="font-Poppins text-2xl ">React Nested Comment Section</h2>
+        <h1 className="font-Poppins text-[50px] ">
+          React Nested Comment Section
+        </h1>
       </div>
       <div className="mt-10">
         <Comments />

@@ -23,11 +23,17 @@ const Comment = ({
       alert("Please add some comment and submit...");
     }
   };
+
   const editedCommentSave = (editedComment, id) => {
     EditExistingCommentHandler(editedComment, id);
   };
+
   const deleteComment = (id) => {
     deleteCommentHandler(id);
+  };
+
+  const reacthandler = (type, id) => {
+    reactToReply(type, id);
   };
 
   return (
@@ -90,7 +96,8 @@ const Comment = ({
               <div
                 className=" w-[30px] h-[30px] p-1 flex justify-center items-center cursor-pointer"
                 onClick={() => {
-                  reactToReply("Like", comment.id);
+                  console.log("inside");
+                  reacthandler("Like", comment.id);
                 }}
               >
                 <AiOutlineLike
@@ -101,7 +108,8 @@ const Comment = ({
               <div
                 className="w-[30px] h-[30px] p-1 flex justify-center items-center cursor-pointer"
                 onClick={() => {
-                  reactToReply("Dislike", comment.id);
+                  console.log("inside");
+                  reacthandler("Dislike", comment.id);
                 }}
               >
                 <AiOutlineDislike
